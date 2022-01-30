@@ -1,0 +1,49 @@
+// If you want to override variables do it here
+@import "variables";
+
+$enable-ltr: true;
+$enable-rtl: true;
+
+// Import CoreUI for React components library
+@import "@coreui/coreui/scss/coreui";
+
+// Import Chart.js custom tooltips styles
+@import "@coreui/chartjs/scss/coreui-chartjs";
+
+@import "layout";
+@import "example";
+
+// If you want to add custom CSS you can put it here.
+@import "custom";
+
+.text-muted{
+  color: rgb(255, 0, 0) !important;
+}
+.qr-code-img
+{
+  width:  100% !important;
+  height: 200px;
+  border-radius: 15px;
+  border: solid 1px #bebebe;
+  cursor: pointer;
+}
+.code-btn{
+  width:  100% !important;
+  margin-top: 5px !important;
+}
+.img-avatar{
+  border-radius: 50px !important;
+  border:solid 1px #bebebe !important;
+  padding: 5px;
+}
+.debarBrand-img{
+  border: solid 1px 5px;
+  background-color: #bebebe;
+  border-radius: 50px;
+}
+.Card-Box{
+  border-bottom: solid 1px #cacacabb;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
