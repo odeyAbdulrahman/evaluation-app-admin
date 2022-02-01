@@ -4,7 +4,7 @@ import axios from 'axios'
 const api = ({ ...options }) => {
   const UNAUTHORIZED = 401
   const token = JSON.parse(localStorage.getItem('token'))
-  const api = axios.create({ baseURL: `http://nasihads-001-site9.etempurl.com/api/` })
+  const api = axios.create({ baseURL: `http://10.26.56.15:900/api/` })
   api.defaults.headers.common['Authorization'] = 'Bearer ' + token
   api.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
   api.defaults.headers.common['Consumer'] = '143217789'

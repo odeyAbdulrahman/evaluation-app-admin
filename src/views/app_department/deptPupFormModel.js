@@ -21,7 +21,7 @@ const DeptPupFormModel = ({
   isOpen,
   departmentModel,
 }) => {
-  const baseUrl = 'www.google.com/'
+  const baseUrl = 'https://evaluationApp.dhaid.shj.ae/#/'
   const [show, setShow] = useState(false)
   const [url, setUrl] = useState('/assets/images/QrCode.png')
   //-------------------start: actions methods -------------------//

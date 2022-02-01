@@ -21,7 +21,8 @@ import api from '../../core/axiosConfig'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
 import loginModel from '../../core/models/loginModel'
-import logoImg from '../../assets/images/react.jpg'
+import logoImg from '../../assets/images/logo.png'
+
 import { useHistory } from 'react-router-dom'
 
 const Login = () => {
@@ -139,7 +140,7 @@ const Login = () => {
                   </Formik>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-primary py-5" style={{ width: '44%' }}>
+              <CCard className="text-white bg-color py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <img src={logoImg} width="150" height="150" />
