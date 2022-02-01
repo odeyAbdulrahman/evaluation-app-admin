@@ -9,9 +9,12 @@ import DataTable from 'react-data-table-component'
 import Moment from 'moment'
 import { cilPen, cilTrash } from '@coreui/icons'
 import DeptPupFormModel from './deptPupFormModel'
+import dataTableService from '../../core/services/serviceDataTable'
 
 const departmentList = () => {
   //-------------------start: declare -------------------//
+  const [filterText, setFilterText] = React.useState('')
+  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
   const [departments, setDepartments] = useState([])
   const [pending, setPending] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
@@ -25,13 +28,31 @@ const departmentList = () => {
     }
     getData()
   }, [])
-  //-------------------start: declare -------------------//
+  //-------------------End: declare -------------------//
 
   //-------------------start: actions methods -------------------//
+  //items after filter
+  const filteredItems = departments.filter((item) => {
+    return (
+      (item.id && item.id.toString().includes(filterText)) ||
+      (item.name && item.name.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.nameAr && item.nameAr.toLowerCase().includes(filterText.toLowerCase()))
+    )
+  })
+  //filter sub Header Component
+  const subHeaderComponent = React.useMemo(
+    () =>
+      dataTableService().subHeaderComponent({
+        setResetPaginationToggle,
+        setFilterText,
+        filterText,
+        resetPaginationToggle,
+      }),
+    [filterText, resetPaginationToggle],
+  )
   //sort funcation
-  const caseInsensitiveSort = (rowA, rowB) => {
-    return 0
-  }
+  const customSort = (rows, selector, direction) =>
+    dataTableService().customSort(rows, selector, direction)
   //edit form btn
   const editFromShow = (data) => {
     departmentModel.id = data.id
@@ -83,61 +104,51 @@ const departmentList = () => {
       name: 'ID',
       selector: (row) => row.id,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Name',
       selector: (row) => row.name,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Name ar',
       selector: (row) => row.nameAr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Name ur',
       selector: (row) => row.nameUr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Head of Department Name',
       selector: (row) => row.departmentHeadName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Head of Department Name (Ar)',
       selector: (row) => row.departmentHeadNameAr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Created by',
       selector: (row) => row.createdName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Updated by',
       selector: (row) => row.updatedName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Created Date',
       selector: (row) => Moment(row.createdDate).format('DD-MM-YYYY MM:SS'),
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Updated Date',
       selector: (row) => Moment(row.updatedDate).format('DD-MM-YYYY MM:SS'),
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       cell: (row) => (
@@ -173,10 +184,14 @@ const departmentList = () => {
             </CRow>
             <DataTable
               columns={columns}
-              data={departments}
+              data={filteredItems}
+              sortFunction={customSort}
               selectableRows
               pagination
               progressPending={pending}
+              subHeader
+              subHeaderComponent={subHeaderComponent}
+              persistTableHead
               highlightOnHover
               pointerOnHover
             />

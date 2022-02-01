@@ -7,9 +7,12 @@ import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/reac
 import DataTable from 'react-data-table-component'
 import Moment from 'moment'
 import { cilTrash } from '@coreui/icons'
+import dataTableService from '../../core/services/serviceDataTable'
 
 const evaluationList = () => {
   //-------------------start: declare -------------------//
+  const [filterText, setFilterText] = React.useState('')
+  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
   const [evaluations, setEvaluations] = useState([])
   const [pending, setPending] = useState(true)
   //use Effect
@@ -25,10 +28,32 @@ const evaluationList = () => {
   //-------------------start: declare -------------------//
 
   //-------------------start: actions methods -------------------//
-  //
-  const caseInsensitiveSort = (rowA, rowB) => {
-    return 0
-  }
+  //items after filter
+  const filteredItems = evaluations.filter((item) => {
+    return (
+      (item.id && item.id.toString().includes(filterText)) ||
+      (item.value && item.value.toString().includes(filterText)) ||
+      (item.departmentName &&
+        item.departmentName.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.departmentNameAr &&
+        item.departmentNameAr.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.userName && item.userName.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.userNameAr && item.userNameAr.toLowerCase().includes(filterText.toLowerCase()))
+    )
+  })
+
+  //filter sub Header Component
+  const subHeaderComponent = React.useMemo(() => {
+    return dataTableService().subHeaderComponent({
+      setResetPaginationToggle,
+      setFilterText,
+      filterText,
+      resetPaginationToggle,
+    })
+  }, [filterText, resetPaginationToggle])
+  //sort funcation
+  const customSort = (rows, selector, direction) =>
+    dataTableService().customSort(rows, selector, direction)
   //
   const deleteFormShow = async (row) => {
     utilitieSweetalert()
@@ -70,43 +95,36 @@ const evaluationList = () => {
       name: 'ID',
       selector: (row) => row.id,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Value',
       selector: (row) => row.value,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Department Name',
       selector: (row) => row.departmentName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Department Name Ar',
       selector: (row) => row.departmentNameAr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'User Name',
       selector: (row) => row.userName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'User Name Ar',
       selector: (row) => row.userNameAr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Date',
       selector: (row) => Moment(row.date).format('DD-MM-YYYY MM:SS'),
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       cell: (row) => (
@@ -128,10 +146,14 @@ const evaluationList = () => {
           <CCardBody>
             <DataTable
               columns={columns}
-              data={evaluations}
+              data={filteredItems}
+              sortFunction={customSort}
               selectableRows
               pagination
               progressPending={pending}
+              subHeader
+              subHeaderComponent={subHeaderComponent}
+              persistTableHead
               highlightOnHover
               pointerOnHover
             />

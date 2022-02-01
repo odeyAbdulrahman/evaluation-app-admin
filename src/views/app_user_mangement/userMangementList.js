@@ -13,11 +13,12 @@ import { cilPen, cilTrash, cilReload, cilFolder, cilFolderOpen } from '@coreui/i
 import UserPupFormModel from './userPupFormModel'
 import UserToDepartPupFormModel from './userToDepartPupFormModel'
 import ChangePasswordPupFormModel from './changePasswordPupFormModel'
-import { useHistory } from 'react-router-dom'
+import dataTableService from '../../core/services/serviceDataTable'
 
 const userMangmentList = () => {
-  const navigate = useHistory()
   //-------------------start: declare -------------------//
+  const [filterText, setFilterText] = React.useState('')
+  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
   const [roles, setRoles] = useState([])
   const [users, setUserMangment] = useState([])
   const [departments, setDepartments] = useState([])
@@ -43,10 +44,29 @@ const userMangmentList = () => {
   //-------------------start: declare -------------------//
 
   //-------------------start: actions methods -------------------//
+  //items after filter
+  const filteredItems = users.filter((item) => {
+    return (
+      (item.userName && item.userName.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.fullName && item.fullName.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.fullNameAr && item.fullNameAr.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.phoneNumber && item.phoneNumber.toString().includes(filterText))
+    )
+  })
+  //filter sub Header Component
+  const subHeaderComponent = React.useMemo(
+    () =>
+      dataTableService().subHeaderComponent({
+        setResetPaginationToggle,
+        setFilterText,
+        filterText,
+        resetPaginationToggle,
+      }),
+    [filterText, resetPaginationToggle],
+  )
   //sort funcation
-  const caseInsensitiveSort = (rowA, rowB) => {
-    return 0
-  }
+  const customSort = (rows, selector, direction) =>
+    dataTableService().customSort(rows, selector, direction)
   //edit form btn
   const editFromShow = (data) => {
     userModel.id = data.id
@@ -120,37 +140,31 @@ const userMangmentList = () => {
       name: 'ID',
       selector: (row) => row.id,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'User Name',
       selector: (row) => row.userName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Full Name',
       selector: (row) => row.fullName,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Full Name Ar',
       selector: (row) => row.fullNameAr,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Phone Number',
       selector: (row) => `${row.countryCode} ${row.phoneNumber}`,
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       name: 'Created Date',
       selector: (row) => Moment(row.DateCreated).format('DD-MM-YYYY MM:SS'),
       sortable: true,
-      sortFunction: caseInsensitiveSort,
     },
     {
       cell: (row) => (
@@ -215,10 +229,14 @@ const userMangmentList = () => {
             </CRow>
             <DataTable
               columns={columns}
-              data={users}
+              data={filteredItems}
+              sortFunction={customSort}
               selectableRows
               pagination
               progressPending={pending}
+              subHeader
+              subHeaderComponent={subHeaderComponent}
+              persistTableHead
               highlightOnHover
               pointerOnHover
             />

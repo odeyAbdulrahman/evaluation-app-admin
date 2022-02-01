@@ -50,3 +50,21 @@ $enable-rtl: true;
 .bg-color{
   background-color: #4d100a;
 }
+.search-btn{
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border: solid 1px #4735df;
+    background-color: #4735df;
+    color: #ffffff;
+    height: 36px;
+    width: 32px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.search-input{
+  padding: 4px !important;
+}
