@@ -5,9 +5,13 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import api from '../../core/axiosConfig'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
-import { CFormSelect, CFormSwitch } from '@coreui/react'
 
-const ChangePasswordPupFormModel = ({ changePasswordIsOpen, setChangePasswordIsOpen, userId }) => {
+const ChangePasswordPupFormModel = ({
+  changePasswordIsOpen,
+  setChangePasswordIsOpen,
+  userId,
+  puptitle,
+}) => {
   //-------------------start: post & put & delete methods -------------------//
   //add new record or update current record in data base
   const ChangePasswordAsync = async (data) => {
@@ -46,7 +50,7 @@ const ChangePasswordPupFormModel = ({ changePasswordIsOpen, setChangePasswordIsO
     <>
       <Modal show={show || changePasswordIsOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{puptitle}</Modal.Title>
         </Modal.Header>
         <Formik
           initialValues={{

@@ -10,10 +10,22 @@ import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
 import { CFormSelect, CFormSwitch } from '@coreui/react'
 
 // eslint-disable-next-line react/prop-types
-const UserPupFormModel = ({ usersAsync, setUsers, setIsOpen, isOpen, roles, userModel }) => {
+const UserPupFormModel = ({
+  usersAsync,
+  setUsers,
+  setIsOpen,
+  isOpen,
+  roles,
+  userModel,
+  puptitle,
+  setPuptitle,
+}) => {
   //-------------------start: actions methods -------------------//
   const [show, setShow] = useState(false)
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    setShow(true)
+    setPuptitle('Add new user')
+  }
   const handleClose = () => {
     if (show) setShow(false)
     if (isOpen) setIsOpen(false)
@@ -85,7 +97,7 @@ const UserPupFormModel = ({ usersAsync, setUsers, setIsOpen, isOpen, roles, user
       </Button>
       <Modal show={show || isOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{puptitle}</Modal.Title>
         </Modal.Header>
         <Formik
           initialValues={{

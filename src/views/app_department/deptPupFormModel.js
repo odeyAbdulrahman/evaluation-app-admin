@@ -20,12 +20,18 @@ const DeptPupFormModel = ({
   setIsOpen,
   isOpen,
   departmentModel,
+  puptitle,
+  setPuptitle,
 }) => {
   const baseUrl = 'https://evaluationApp.dhaid.shj.ae/#/'
+  const baseImg = '/assets/images/QrCode.png'
   const [show, setShow] = useState(false)
-  const [url, setUrl] = useState('/assets/images/QrCode.png')
+  const [url, setUrl] = useState(baseImg)
   //-------------------start: actions methods -------------------//
-  const handleShow = () => setShow(true)
+  const handleShow = () => {
+    setShow(true)
+    setPuptitle('Add new department')
+  }
   //
   const handleClose = () => {
     if (show) setShow(false)
@@ -80,7 +86,7 @@ const DeptPupFormModel = ({
       </Button>
       <Modal show={show || isOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{puptitle}</Modal.Title>
         </Modal.Header>
         <Formik
           initialValues={{
@@ -109,10 +115,19 @@ const DeptPupFormModel = ({
             <form onSubmit={handleSubmit}>
               <Modal.Body>
                 <Form.Group className="mb-3" controlId="formQRCode" hidden={!isOpen}>
-                  <img className="qr-code-img" src={url} onClick={() => saveAs(url)} />
+                  <img
+                    className="qr-code-img"
+                    src={url}
+                    onClick={() => {
+                      if (url.slice(0, 21) === 'data:image/png;base64') {
+                        saveAs(url)
+                        setUrl(baseImg)
+                      } else
+                        utilitieSweetalert().msgSwl('sorry!', 'Create the QR Code first', 'error')
+                    }}
+                  />
                   <a className="btn btn-outline-success code-btn" onClick={() => CreateQRCode()}>
-                    {' '}
-                    Create QRCode{' '}
+                    Create QRCode
                   </a>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formName">

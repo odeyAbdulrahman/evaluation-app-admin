@@ -17,6 +17,7 @@ import dataTableService from '../../core/services/serviceDataTable'
 
 const userMangmentList = () => {
   //-------------------start: declare -------------------//
+  const [puptitle, setPuptitle] = useState('')
   const [filterText, setFilterText] = React.useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
   const [roles, setRoles] = useState([])
@@ -78,6 +79,7 @@ const userMangmentList = () => {
     userModel.role = data.role
     userModel.availabilityStatus = data.availabilityStatus
     setIsOpen(true)
+    setPuptitle('Edit user info')
   }
   //delete form btn
   const deleteFormShow = async (row) => {
@@ -96,16 +98,19 @@ const userMangmentList = () => {
   const changePasswordFromShow = async (data) => {
     userModel.id = data.id
     setChangePasswordIsOpen(true)
+    setPuptitle('Change password')
   }
   //Add user To dapartment
   const userToDepartFromShow = async (data) => {
     userModel.id = data.id
     setUserToDeptIsOpen(true)
+    setPuptitle('Add user to department')
   }
   //Add user To dapartment
   const headOfDeptFromShow = async (data) => {
     userModel.id = data.id
     setHeadOfDeptIsOpen(true)
+    setPuptitle('add user as department manager')
   }
   //-------------------end: actions methods -------------------//
 
@@ -169,19 +174,19 @@ const userMangmentList = () => {
     {
       cell: (row) => (
         <>
-          <CButton color="danger" onClick={() => deleteFormShow(row)}>
+          <CButton color="danger" onClick={() => deleteFormShow(row)} title="Delete user">
             <CIcon icon={cilTrash} className="me-2" />
           </CButton>
-          <CButton color="success" onClick={() => editFromShow(row)}>
+          <CButton color="success" onClick={() => editFromShow(row)} title="Edit user info">
             <CIcon icon={cilPen} className="me-2" />
           </CButton>
-          <CButton color="info" onClick={() => changePasswordFromShow(row)}>
+          <CButton color="info" onClick={() => changePasswordFromShow(row)} title="Change password">
             <CIcon icon={cilReload} className="me-2" />
           </CButton>
-          <CButton color="dark" onClick={() => userToDepartFromShow(row)}>
+          <CButton color="dark" onClick={() => userToDepartFromShow(row)} title="Add to department">
             <CIcon icon={cilFolder} className="me-2" />
           </CButton>
-          <CButton color="light" onClick={() => headOfDeptFromShow(row)}>
+          <CButton color="light" onClick={() => headOfDeptFromShow(row)} title="Set as manager">
             <CIcon icon={cilFolderOpen} className="me-2" />
           </CButton>
         </>
@@ -224,6 +229,8 @@ const userMangmentList = () => {
                   isOpen={isOpen}
                   roles={roles}
                   userModel={userModel}
+                  puptitle={puptitle}
+                  setPuptitle={setPuptitle}
                 />
               </CCol>
             </CRow>
@@ -245,6 +252,7 @@ const userMangmentList = () => {
                 changePasswordIsOpen={changePasswordIsOpen}
                 setChangePasswordIsOpen={setChangePasswordIsOpen}
                 userId={userModel.id}
+                puptitle={puptitle}
               />
             </CCol>
             <CCol xs={12}>
@@ -255,6 +263,7 @@ const userMangmentList = () => {
                 headOfDeptIsOpen={HeadOfDeptIsOpen}
                 departments={departments}
                 userId={userModel.id}
+                puptitle={puptitle}
               />
             </CCol>
           </CCardBody>

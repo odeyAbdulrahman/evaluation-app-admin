@@ -13,6 +13,7 @@ import dataTableService from '../../core/services/serviceDataTable'
 
 const departmentList = () => {
   //-------------------start: declare -------------------//
+  const [puptitle, setPuptitle] = useState('')
   const [filterText, setFilterText] = React.useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
   const [departments, setDepartments] = useState([])
@@ -60,6 +61,7 @@ const departmentList = () => {
     departmentModel.nameAr = data.nameAr
     departmentModel.nameUr = data.nameUr
     setIsOpen(true)
+    setPuptitle('Edit department info')
   }
   //delete form btn
   const deleteFormShow = (row) => {
@@ -179,6 +181,8 @@ const departmentList = () => {
                   setIsOpen={setIsOpen}
                   isOpen={isOpen}
                   departmentModel={departmentModel}
+                  puptitle={puptitle}
+                  setPuptitle={setPuptitle}
                 />
               </CCol>
             </CRow>

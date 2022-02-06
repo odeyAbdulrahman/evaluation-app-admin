@@ -7,7 +7,7 @@ import { Formik } from 'formik'
 import * as Yup from 'yup'
 import api from '../../core/axiosConfig'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
-import { CFormSelect, CFormSwitch } from '@coreui/react'
+import { CFormSelect } from '@coreui/react'
 
 // eslint-disable-next-line react/prop-types
 const UserToDepartPupFormModel = ({
@@ -17,6 +17,7 @@ const UserToDepartPupFormModel = ({
   headOfDeptIsOpen,
   departments,
   userId,
+  puptitle,
 }) => {
   //-------------------start: post & put & delete methods -------------------//
   //add new record or update current record in data base
@@ -57,7 +58,7 @@ const UserToDepartPupFormModel = ({
     <>
       <Modal show={headOfDeptIsOpen || userToDeptIsOpen} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>{puptitle}</Modal.Title>
         </Modal.Header>
         <Formik
           initialValues={{
