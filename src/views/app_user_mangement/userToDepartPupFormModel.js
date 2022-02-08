@@ -95,7 +95,11 @@ const UserToDepartPupFormModel = ({
                   >
                     <option value="">--select department--</option>
                     {departments &&
-                      departments.map((row) => <option value={row.id}>{row.name}</option>)}
+                      departments.map((row) => (
+                        <option key={row.id} value={row.id}>
+                          {row.name}
+                        </option>
+                      ))}
                   </CFormSelect>
                   <Form.Text className="text-muted">
                     {errors.departmentId && touched.departmentId && errors.departmentId}

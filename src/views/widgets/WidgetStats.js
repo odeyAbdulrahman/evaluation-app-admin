@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
-import { CWidgetStatsB, CRow, CCol } from '@coreui/react'
+import { CWidgetStatsB, CCol } from '@coreui/react'
 import getwidgetsCountsData from '../../core/data/widgetsCountsData'
 
 const WidgetStats = (counts) => {

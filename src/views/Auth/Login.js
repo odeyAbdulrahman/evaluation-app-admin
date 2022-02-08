@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -7,23 +6,21 @@ import {
   CCardGroup,
   CCol,
   CContainer,
-  CForm,
   CFormInput,
   CInputGroup,
   CInputGroupText,
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { Modal, Button, Form } from 'react-bootstrap'
+import { Form } from 'react-bootstrap'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import api from '../../core/axiosConfig'
 import { cilLockLocked, cilUser } from '@coreui/icons'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
 import loginModel from '../../core/models/loginModel'
-import logoImg from '../../assets/images/logo.png'
-
 import { useHistory } from 'react-router-dom'
+import logoImg from '../../assets/images/logo.png'
 
 const Login = () => {
   const navigate = useHistory()
@@ -93,7 +90,7 @@ const Login = () => {
                           <CFormInput
                             placeholder="Enter user name"
                             name="userName"
-                            autocomplete="off"
+                            autoComplete="off"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.userName}
@@ -112,7 +109,7 @@ const Login = () => {
                             type="password"
                             placeholder="Password"
                             name="password"
-                            autocomplete="off"
+                            autoComplete="off"
                             onChange={handleChange}
                             onBlur={handleBlur}
                             value={values.password}

@@ -10,7 +10,6 @@ const api = ({ ...options }) => {
   api.defaults.headers.common['Consumer'] = '143217789'
   api.defaults.headers.common['Lang'] = '22'
   const onSuccess = (response) => {
-    console.log(response.data)
     return response
   }
   const onError = (error) => {

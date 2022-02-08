@@ -91,8 +91,16 @@ const Dashboard = () => {
               setDepartmentId(e.target.selectedOptions[0].value)
             }}
           >
-            <option value=""> --Select department-- </option>
-            {departments && departments.map((row) => <option value={row.id}>{row.name}</option>)}
+            <option key="0" value="">
+              {' '}
+              --Select department--{' '}
+            </option>
+            {departments &&
+              departments.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {row.name}
+                </option>
+              ))}
           </CFormSelect>
           <h6>From date</h6>
           <WidgetsDatePicker startDate={startDate} setStartDate={setStartDate} />

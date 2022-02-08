@@ -6,7 +6,7 @@ const FilterComponent = ({ filterText, onFilter, onClear }) => (
       id="search"
       type="text"
       className="search-input"
-      placeholder="Filter By Name"
+      placeholder="Filter By"
       aria-label="Search Input"
       value={filterText}
       onChange={onFilter}
