@@ -14,8 +14,8 @@ import dataTableService from '../../core/services/serviceDataTable'
 const departmentList = () => {
   //-------------------start: declare -------------------//
   const [puptitle, setPuptitle] = useState('')
-  const [filterText, setFilterText] = React.useState('')
-  const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
+  const [filterText, setFilterText] = useState('')
+  const [resetPaginationToggle, setResetPaginationToggle] = useState(false)
   const [departments, setDepartments] = useState([])
   const [pending, setPending] = useState(true)
   const [isOpen, setIsOpen] = useState(false)

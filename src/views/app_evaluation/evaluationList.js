@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react'
 import api from '../../core/axiosConfig'
@@ -6,8 +7,9 @@ import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
 import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import DataTable from 'react-data-table-component'
 import Moment from 'moment'
-import { cilTrash } from '@coreui/icons'
+import { cilOpentype, cilTrash } from '@coreui/icons'
 import dataTableService from '../../core/services/serviceDataTable'
+import getwidgetsCountsData from '../../core/data/widgetsCountsData'
 
 const evaluationList = () => {
   //-------------------start: declare -------------------//
@@ -28,6 +30,11 @@ const evaluationList = () => {
   //-------------------start: declare -------------------//
 
   //-------------------start: actions methods -------------------//
+  //
+  const getTitle = (number) => {
+    const row = getwidgetsCountsData().find((x) => x.id === number)
+    return row.title
+  }
   //items after filter
   const filteredItems = evaluations.filter((item) => {
     return (
@@ -74,6 +81,15 @@ const evaluationList = () => {
   //-------------------end: get methods -------------------//
 
   //-------------------start: post & put & delete methods -------------------//
+  const viewDetails = (data) => {
+    utilitieSweetalert().msgSwl(
+      'view details!',
+      `<p><strong>Phone:</strong>   ${
+        data.phoneNumber === '' ? 'No text' : data.phoneNumber
+      } </p><br /><strong>Note:</strong> ${data.note === '' ? 'No text' : data.note} <p></p>`,
+      'success',
+    )
+  }
   const delEvaluationAsync = async (id) => {
     api({ url: `Evaluation/${id}`, method: 'delete' }).then((response) => {
       if (response.data.code === 202) {
@@ -98,7 +114,7 @@ const evaluationList = () => {
     },
     {
       name: 'Value',
-      selector: (row) => row.value,
+      selector: (row) => getTitle(row.value),
       sortable: true,
     },
     {
@@ -131,6 +147,9 @@ const evaluationList = () => {
         <>
           <CButton color="danger" onClick={() => deleteFormShow(row)}>
             <CIcon icon={cilTrash} className="me-2" />
+          </CButton>
+          <CButton color="success" onClick={() => viewDetails(row)} hidden={row.value !== 44}>
+            <CIcon icon={cilOpentype} className="me-2" />
           </CButton>
         </>
       ),
