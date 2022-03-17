@@ -48,10 +48,12 @@ const userMangmentList = () => {
   //items after filter
   const filteredItems = users.filter((item) => {
     return (
+      (item.id && item.id.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.userName && item.userName.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.fullName && item.fullName.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.fullNameAr && item.fullNameAr.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.phoneNumber && item.phoneNumber.toString().includes(filterText))
+      (item.phoneNumber && item.phoneNumber.toString().includes(filterText)) ||
+      (item.dateCreated && Moment(item.dateCreated).format('DD-MM-YYYY MM:SS').includes(filterText))
     )
   })
   //filter sub Header Component
@@ -168,7 +170,7 @@ const userMangmentList = () => {
     },
     {
       name: 'Created Date',
-      selector: (row) => Moment(row.DateCreated).format('DD-MM-YYYY MM:SS'),
+      selector: (row) => Moment(row.dateCreated).format('DD-MM-YYYY MM:SS'),
       sortable: true,
     },
     {

@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react'
-import departmentModel from '../../core/models/departmentModel'
+import subDepartmentModel from '../../core/models/subDepartmentModel'
 import api from '../../core/axiosConfig'
 import CIcon from '@coreui/icons-react'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
@@ -8,15 +8,17 @@ import { CButton, CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/reac
 import DataTable from 'react-data-table-component'
 import Moment from 'moment'
 import { cilPen, cilTrash } from '@coreui/icons'
-import DeptPupFormModel from './deptPupFormModel'
+
+import SubDeptPupFormModel from './subDeptPupFormModel'
 import dataTableService from '../../core/services/serviceDataTable'
 
-const departmentList = () => {
+const subDepartmentList = () => {
   //-------------------start: declare -------------------//
   const [puptitle, setPuptitle] = useState('')
   const [filterText, setFilterText] = useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = useState(false)
   const [departments, setDepartments] = useState([])
+  const [subDepartments, setSubDepartments] = useState([])
   const [pending, setPending] = useState(true)
   const [isOpen, setIsOpen] = useState(false)
   //use Effect
@@ -26,6 +28,10 @@ const departmentList = () => {
         if (response.data !== null) setDepartments(response.data)
         setPending(false)
       })
+      subDepartmentsAsync().then((response) => {
+        if (response.data !== null) setSubDepartments(response.data)
+        setPending(false)
+      })
     }
     getData()
   }, [])
@@ -33,12 +39,12 @@ const departmentList = () => {
 
   //-------------------start: actions methods -------------------//
   //items after filter
-  const filteredItems = departments.filter((item) => {
+  const filteredItems = subDepartments.filter((item) => {
     return (
       (item.id && item.id.toString().includes(filterText)) ||
       (item.name && item.name.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.departmentHeadName &&
-        item.departmentHeadName.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.departmentName &&
+        item.departmentName.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.createdDate &&
         Moment(item.createdDate).format('DD-MM-YYYY MM:SS').includes(filterText)) ||
       (item.updatedDate && Moment(item.updatedDate).format('DD-MM-YYYY MM:SS').includes(filterText))
@@ -60,10 +66,10 @@ const departmentList = () => {
     dataTableService().customSort(rows, selector, direction)
   //edit form btn
   const editFromShow = (data) => {
-    departmentModel.id = data.id
-    departmentModel.name = data.name
-    departmentModel.nameAr = data.nameAr
-    departmentModel.nameUr = data.nameUr
+    subDepartmentModel.id = data.id
+    subDepartmentModel.name = data.name
+    subDepartmentModel.nameAr = data.nameAr
+    subDepartmentModel.nameUr = data.nameUr
     setIsOpen(true)
     setPuptitle('Edit department info')
   }
@@ -85,15 +91,17 @@ const departmentList = () => {
   //-------------------start: get methods -------------------//
   //get records list
   const departmentsAsync = () => api({ url: 'Department/0/1000' })
+  //get records list
+  const subDepartmentsAsync = () => api({ url: 'SubDepartment/0/1000' })
   //-------------------end: get methods -------------------//
 
   //-------------------start: post & put & delete methods -------------------//
   //delete current record
   const delDepartmentsAsync = (id) => {
-    api({ url: `Department/${id}`, method: 'delete' }).then((response) => {
+    api({ url: `SubDepartment/${id}`, method: 'delete' }).then((response) => {
       if (response.data.code === 202) {
-        departmentsAsync().then((response) => {
-          if (response.data !== null) setDepartments(response.data)
+        subDepartmentsAsync().then((response) => {
+          if (response.data !== null) setSubDepartments(response.data)
           setPending(false)
         })
         utilitieSweetalert().msgSwl('Good job!', '' + response.data.description, 'success')
@@ -117,8 +125,8 @@ const departmentList = () => {
       sortable: true,
     },
     {
-      name: 'Head of Department Name',
-      selector: (row) => row.departmentHeadName,
+      name: 'Department Name',
+      selector: (row) => row.departmentName,
       sortable: true,
     },
     {
@@ -159,17 +167,18 @@ const departmentList = () => {
       <CCol xs={12}>
         <CCard className="mb-4">
           <CCardHeader>
-            <strong>departments</strong> <small>list</small>
+            <strong>subDepartments</strong> <small>list</small>
           </CCardHeader>
           <CCardBody>
             <CRow>
               <CCol xs={12}>
-                <DeptPupFormModel
-                  departmentsAsync={departmentsAsync}
-                  setDepartments={setDepartments}
+                <SubDeptPupFormModel
+                  subDepartmentsAsync={subDepartmentsAsync}
+                  setSubDepartments={setSubDepartments}
                   setIsOpen={setIsOpen}
                   isOpen={isOpen}
-                  departmentModel={departmentModel}
+                  departments={departments}
+                  subDepartmentModel={subDepartmentModel}
                   puptitle={puptitle}
                   setPuptitle={setPuptitle}
                 />
@@ -194,4 +203,4 @@ const departmentList = () => {
     </CRow>
   )
 }
-export default departmentList
+export default subDepartmentList

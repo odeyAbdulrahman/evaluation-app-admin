@@ -32,5 +32,11 @@ const _nav = [
     to: '/department',
     icon: <CIcon icon={cilFolder} customClassName="nav-icon" />,
   },
+  {
+    component: CNavItem,
+    name: 'Sub Department',
+    to: '/sub-department',
+    icon: <CIcon icon={cilFolder} customClassName="nav-icon" />,
+  },
 ]
 export default _nav

@@ -6,27 +6,25 @@
 /* eslint-disable react/prop-types */
 import React, { useEffect, useState } from 'react'
 import { Modal, Button, Form } from 'react-bootstrap'
+import { CFormSelect } from '@coreui/react'
+
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import api from '../../core/axiosConfig'
 import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
-import QRCode from 'qrcode'
-import { saveAs } from 'file-saver'
 
 // eslint-disable-next-line react/prop-types
-const DeptPupFormModel = ({
-  departmentsAsync,
-  setDepartments,
+const SubDeptPupFormModel = ({
+  subDepartmentsAsync,
+  setSubDepartments,
   setIsOpen,
   isOpen,
-  departmentModel,
+  departments,
+  subDepartmentModel,
   puptitle,
   setPuptitle,
 }) => {
-  const baseUrl = 'https://evaluationApp.dhaid.shj.ae/#/'
-  const baseImg = '/assets/images/QrCode.png'
   const [show, setShow] = useState(false)
-  const [url, setUrl] = useState(baseImg)
   //-------------------start: actions methods -------------------//
   const handleShow = () => {
     setShow(true)
@@ -37,35 +35,31 @@ const DeptPupFormModel = ({
     if (show) setShow(false)
     if (isOpen) setIsOpen(false)
   }
-  //
-  const CreateQRCode = () => {
-    QRCode.toDataURL(baseUrl + departmentModel.id)
-      .then((x) => setUrl(x))
-      .catch((err) => console.error(err))
-  }
   //-------------------end: actions methods -------------------//
 
   //-------------------start: post & put & delete methods -------------------//
   //add new record or update current record in data base
   const postPutAsync = (data) => {
     if (isOpen !== true) {
-      api({ url: 'Department', method: 'post', data }).then((response) => {
+      api({ url: 'SubDepartment', method: 'post', data }).then((response) => {
         if (response.data.code === 200) {
-          departmentsAsync().then((response) => {
-            if (response.data !== null) setDepartments(response.data)
+          subDepartmentsAsync().then((response) => {
+            if (response.data !== null) setSubDepartments(response.data)
           })
           utilitieSweetalert().msgSwl('Good job!', response.data.description, 'success')
         } else utilitieSweetalert().msgSwl('sorry!', '' + response.data.description, 'error')
       })
     } else {
-      api({ url: `Department/${departmentModel.id}`, method: 'put', data }).then((response) => {
-        if (response.data.code === 201) {
-          departmentsAsync().then((response) => {
-            if (response.data !== null) setDepartments(response.data)
-          })
-          utilitieSweetalert().msgSwl('Good job!', response.data.description, 'success')
-        } else utilitieSweetalert().msgSwl('sorry!', '' + response.data.description, 'error')
-      })
+      api({ url: `SubDepartment/${subDepartmentModel.id}`, method: 'put', data }).then(
+        (response) => {
+          if (response.data.code === 201) {
+            subDepartmentsAsync().then((response) => {
+              if (response.data !== null) setSubDepartments(response.data)
+            })
+            utilitieSweetalert().msgSwl('Good job!', response.data.description, 'success')
+          } else utilitieSweetalert().msgSwl('sorry!', '' + response.data.description, 'error')
+        },
+      )
     }
   }
   //-------------------end: post & put & delete methods -------------------//
@@ -75,7 +69,7 @@ const DeptPupFormModel = ({
   const validationSchema = Yup.object({
     name: Yup.string().required().min(4).max(50),
     nameAr: Yup.string().required().min(4).max(50),
-    //nameUr: Yup.string().required().min(4).max(50),
+    //nameUr: Yup.string().required().min(10).max(50),
   })
   //-------------------end: validation Schema methods -------------------//
 
@@ -90,9 +84,10 @@ const DeptPupFormModel = ({
         </Modal.Header>
         <Formik
           initialValues={{
-            name: departmentModel.name,
-            nameAr: departmentModel.nameAr,
-            nameUr: departmentModel.nameUr,
+            name: subDepartmentModel.name,
+            nameAr: subDepartmentModel.nameAr,
+            nameUr: subDepartmentModel.nameUr,
+            departmentId: subDepartmentModel.departmentId,
           }}
           validationSchema={validationSchema}
           onSubmit={(values, onSubmitProps) => {
@@ -114,24 +109,28 @@ const DeptPupFormModel = ({
           }) => (
             <form onSubmit={handleSubmit}>
               <Modal.Body>
-                <Form.Group className="mb-3" controlId="formQRCode" hidden={!isOpen}>
-                  <img
-                    className="qr-code-img"
-                    src={url}
-                    onClick={() => {
-                      if (url.slice(0, 21) === 'data:image/png;base64') {
-                        saveAs(url)
-                        setUrl(baseImg)
-                      } else
-                        utilitieSweetalert().msgSwl('sorry!', 'Create the QR Code first', 'error')
-                    }}
-                  />
-                  <a className="btn btn-outline-success code-btn" onClick={() => CreateQRCode()}>
-                    Create QRCode
-                  </a>
+                <Form.Group className="mb-3" controlId="formName">
+                  <Form.Label>Department</Form.Label>
+                  <CFormSelect
+                    name="departmentId"
+                    aria-label="-- select department --"
+                    onChange={handleChange}
+                    value={values.departmentId}
+                  >
+                    <option value="">--select department--</option>
+                    {departments &&
+                      departments.map((dept) => (
+                        <option key={dept.id} value={dept.id}>
+                          {dept.name}
+                        </option>
+                      ))}
+                  </CFormSelect>
+                  <Form.Text className="text-muted">
+                    {errors.departmentId && touched.departmentId && errors.departmentId}
+                  </Form.Text>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formName">
-                  <Form.Label>Depart Name</Form.Label>
+                  <Form.Label>Sub Depart Name</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter name"
@@ -145,7 +144,7 @@ const DeptPupFormModel = ({
                   </Form.Text>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                  <Form.Label>Depart Name Ar</Form.Label>
+                  <Form.Label>Sub Depart Name Ar</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="Enter name"
@@ -158,20 +157,22 @@ const DeptPupFormModel = ({
                     {errors.nameAr && touched.nameAr && errors.nameAr}
                   </Form.Text>
                 </Form.Group>
-                {/* <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Depart Name Ur</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter name Ur"
-                      name="nameUr"
-                      onChange={handleChange}
-                      onBlur={handleBlur}
-                      value={values.nameUr}
-                    />
-                    <Form.Text className="text-muted">
-                      {errors.nameUr && touched.nameUr && errors.nameUr}
-                    </Form.Text>
-                  </Form.Group> */}
+                {/*
+                    <Form.Group className="mb-3" controlId="formBasicEmail">
+                  <Form.Label>Sub Depart Name Ur</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Enter name Ur"
+                    name="nameUr"
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    value={values.nameUr}
+                  />
+                  <Form.Text className="text-muted">
+                    {errors.nameUr && touched.nameUr && errors.nameUr}
+                  </Form.Text>
+                </Form.Group>
+                  */}
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
@@ -188,4 +189,4 @@ const DeptPupFormModel = ({
     </>
   )
 }
-export default DeptPupFormModel
+export default SubDeptPupFormModel

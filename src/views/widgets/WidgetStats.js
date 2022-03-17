@@ -1,14 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
 import { CWidgetStatsB, CCol } from '@coreui/react'
-import getwidgetsCountsData from '../../core/data/widgetsCountsData'
+import emojesData from '../../core/data/emojesData'
 
 const WidgetStats = (counts) => {
-  const newData = getwidgetsCountsData().map((item, i) => Object.assign({}, item, counts.counts[i]))
+  const newData = emojesData.map((item, i) => Object.assign({}, item, counts.counts[i]))
   return (
     newData &&
     newData.map((item) => (
-      <CCol xs={6} key={item.id}>
+      <CCol xs={4} key={item.id}>
         <CWidgetStatsB
           className="mb-3"
           color="primary"

@@ -9,7 +9,7 @@ import DataTable from 'react-data-table-component'
 import Moment from 'moment'
 import { cilOpentype, cilTrash } from '@coreui/icons'
 import dataTableService from '../../core/services/serviceDataTable'
-import getwidgetsCountsData from '../../core/data/widgetsCountsData'
+import emojesData from '../../core/data/emojesData'
 
 const evaluationList = () => {
   //-------------------start: declare -------------------//
@@ -32,7 +32,7 @@ const evaluationList = () => {
   //-------------------start: actions methods -------------------//
   //
   const getTitle = (number) => {
-    const row = getwidgetsCountsData().find((x) => x.id === number)
+    const row = emojesData.find((x) => x.id === number)
     return row.title
   }
   //items after filter
@@ -42,13 +42,12 @@ const evaluationList = () => {
       (item.value && item.value.toString().includes(filterText)) ||
       (item.departmentName &&
         item.departmentName.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.departmentNameAr &&
-        item.departmentNameAr.toLowerCase().includes(filterText.toLowerCase())) ||
+      (item.subDepartmentName &&
+        item.subDepartmentName.toLowerCase().includes(filterText.toLowerCase())) ||
       (item.userName && item.userName.toLowerCase().includes(filterText.toLowerCase())) ||
-      (item.userNameAr && item.userNameAr.toLowerCase().includes(filterText.toLowerCase()))
+      (item.date && Moment(item.date).format('DD-MM-YYYY MM:SS').includes(filterText))
     )
   })
-
   //filter sub Header Component
   const subHeaderComponent = React.useMemo(() => {
     return dataTableService().subHeaderComponent({
@@ -123,18 +122,13 @@ const evaluationList = () => {
       sortable: true,
     },
     {
-      name: 'Department Name Ar',
-      selector: (row) => row.departmentNameAr,
+      name: 'Sub Department Name Name',
+      selector: (row) => row.subDepartmentName,
       sortable: true,
     },
     {
       name: 'User Name',
       selector: (row) => row.userName,
-      sortable: true,
-    },
-    {
-      name: 'User Name Ar',
-      selector: (row) => row.userNameAr,
       sortable: true,
     },
     {
