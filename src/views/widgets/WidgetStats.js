@@ -4,21 +4,25 @@ import { CWidgetStatsB, CCol } from '@coreui/react'
 import emojesData from '../../core/data/emojesData'
 
 const WidgetStats = (counts) => {
-  const newData = emojesData.map((item, i) => Object.assign({}, item, counts.counts[i]))
-  return (
-    newData &&
-    newData.map((item) => (
-      <CCol xs={4} key={item.id}>
-        <CWidgetStatsB
-          className="mb-3"
-          color="primary"
-          inverse
-          progress={{ value: item.item3 }}
-          text="All RATINGS"
-          title={item.title}
-        />
-      </CCol>
-    ))
-  )
+  try {
+    const newData = emojesData.map((item, i) => Object.assign({}, item, counts.counts[i]))
+    return (
+      newData &&
+      newData.map((item) => (
+        <CCol lg={4} xs={12} key={item.id}>
+          <CWidgetStatsB
+            className="mb-3"
+            color="primary"
+            inverse
+            progress={{ value: item.item3 }}
+            text="All RATINGS"
+            title={item.title}
+          />
+        </CCol>
+      ))
+    )
+  } catch {
+    return ''
+  }
 }
 export default WidgetStats

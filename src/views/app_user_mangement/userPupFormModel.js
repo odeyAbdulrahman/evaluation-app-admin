@@ -82,9 +82,9 @@ const UserPupFormModel = ({
     role: Yup.string().required(),
   })
   const upValidationSchema = Yup.object({
-    userName: Yup.string().required().min(4).max(10),
-    fullName: Yup.string().required().min(4).max(50),
-    fullNameAr: Yup.string().required().min(4).max(50),
+    userName: Yup.string().required().max(10),
+    fullName: Yup.string().required().max(50),
+    fullNameAr: Yup.string().required().max(50),
     email: Yup.string().email().required().min(10).max(50),
     phoneNumber: Yup.string().min(9).max(9).required(),
   })

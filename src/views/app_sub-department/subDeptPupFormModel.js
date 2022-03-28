@@ -67,9 +67,9 @@ const SubDeptPupFormModel = ({
   //-------------------start: validation Schema methods -------------------//
   //validation Schema Add & put
   const validationSchema = Yup.object({
-    name: Yup.string().required().min(4).max(50),
-    nameAr: Yup.string().required().min(4).max(50),
-    //nameUr: Yup.string().required().min(10).max(50),
+    name: Yup.string().required().max(50),
+    nameAr: Yup.string().required().max(50),
+    //nameUr: Yup.string().required().max(50),
   })
   //-------------------end: validation Schema methods -------------------//
 

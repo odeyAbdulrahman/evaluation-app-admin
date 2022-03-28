@@ -24,11 +24,6 @@ import logoImg from '../../assets/images/logo.png'
 
 const Login = () => {
   const navigate = useHistory()
-  useEffect(() => {
-    if (localStorage.getItem('token') !== null) {
-      navigate.push('/dashboard')
-    }
-  }, [])
   //-------------------start: validation Schema methods -------------------//
   //validation Schema Add & put
   const validationSchema = Yup.object({

@@ -1,15 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useHistory } from 'react-router-dom'
-const langService = () => {
-  const UNAUTHORIZED = 401
-  const navigate = useHistory()
-  const logOut = (status) => {
-    if (status === UNAUTHORIZED) {
-      localStorage.removeItem('token')
-      navigate.push('/login')
-    }
-    return null
-  }
-  return { logOut }
+import jwt_decode from 'jwt-decode'
+
+export const logOut = (navigate) => {
+  localStorage.removeItem('token')
 }
-export default langService
+
+export const decoded = (token) => {
+  return token !== null ? jwt_decode(JSON.parse(token)) : null
+}

@@ -1,6 +1,6 @@
-/* eslint-disable react/jsx-key */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react'
-import { useHistory } from 'react-router-dom'
 import WidgetsCounts from '../widgets/WidgetsCounts.js'
 import WidgetStats from '../widgets/WidgetStats.js'
 import { CRow, CCol, CFormSelect } from '@coreui/react'
@@ -8,10 +8,9 @@ import api from '../../core/axiosConfig'
 import Moment from 'moment'
 import WidgetsDepartmentCard from '../widgets/WidgetsDepartmentCard.js'
 import WidgetsDatePicker from '../widgets/DatePicker.js'
-import utilitieSweetalert from '../../core/utilities/utilitieSweetalert2'
+import { decoded } from '../../core/services/authService'
 
 const Dashboard = () => {
-  const navigate = useHistory()
   const [counts, setCounts] = useState([])
   const [cardCounts, setCardCounts] = useState([])
   const [startDate, setStartDate] = useState(new Date())
@@ -20,51 +19,51 @@ const Dashboard = () => {
   const [departments, setDepartments] = useState([])
   const [subDepartmentId, setSubDepartmentId] = useState(0)
   const [subDepartments, setSubDepartments] = useState([])
+  const [userRole, setUserRole] = useState({})
 
   //-------------------start: actions methods -------------------//
   //use Effect
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    if (token === null) {
-      localStorage.removeItem('token')
-      navigate.push('/login')
-    } else {
+    const token = localStorage.getItem('token')
+    setUserRole(decoded(token))
+    console.log(JSON.stringify(token))
+    console.log(JSON.stringify(userRole))
+    if (userRole.role === 'Admin') {
       departmentsAsync().then((response) => {
+        console.log(JSON.stringify(response.data))
         if (response.data !== null) setDepartments(response.data)
       })
-      CountsAsync().then((response) => {
-        if (response.data !== null) setCounts(response.data)
-      })
-      const currentDate = new Date()
-      const fromDate = Moment(currentDate, 'DD-MM-YYYY').add(-31, 'days')
-      CountsByDepartmentAsync(
-        1,
-        -1,
-        `${fromDate.format('DD')}-${fromDate.format('MM')}-${fromDate.format('YYYY')}`,
-        Moment(currentDate).format('DD-MM-YYYY'),
-      ).then((response) => {
-        if (response.data !== null) setCardCounts(response.data)
+    } else {
+      const deptId = localStorage.getItem('deptId')
+      subDepartmentsAsync(deptId).then((response) => {
+        if (response.data !== null) setSubDepartments(response.data)
       })
     }
-  }, [])
+    CountsAsync().then((response) => {
+      if (response.data !== null) setCounts(response.data)
+    })
+  }, [userRole.unique_name])
 
   const FilterByDepartmentAsync = () => {
-    if (departmentId !== 0) {
-      const startString = Moment(startDate).format('DD-MM-YYYY')
-      const toString = Moment(toDate).format('DD-MM-YYYY')
+    const startString = Moment(startDate).format('DD-MM-YYYY')
+    const toString = Moment(toDate).format('DD-MM-YYYY')
+    if (userRole.role === 'Admin') {
       CountsByDepartmentAsync(departmentId, subDepartmentId, startString, toString).then(
         (response) => {
           if (response.data !== null) setCardCounts(response.data)
         },
       )
-    } else utilitieSweetalert().msgSwl('sorry!', 'selete the department', 'error')
+    } else {
+      CountsBySubDepartmentAsync(subDepartmentId, startString, toString).then((response) => {
+        if (response.data !== null) setCardCounts(response.data)
+      })
+    }
   }
 
   //-------------------end: actions methods -------------------//
 
   //-------------------start: get methods -------------------//
-  //get records list
-  const departmentsAsync = () => api({ url: 'Department/0/1000' })
+  const departmentsAsync = () => api({ url: `Department/0/1000` })
   //get data of Departments from api
   const subDepartmentsAsync = (deptId) => api({ url: `SubDepartment/${deptId}` })
   //get records list
@@ -74,6 +73,10 @@ const Dashboard = () => {
     api({
       url: `Dashboard/${departmentId}/${subDepartmentId}/${from.toString()}/${to.toString()}`,
     })
+  const CountsBySubDepartmentAsync = (subDepartmentId, from, to) =>
+    api({
+      url: `Dashboard/${subDepartmentId}/${from.toString()}/${to.toString()}`,
+    })
   //-------------------end: get methods -------------------//
 
   return (
@@ -81,30 +84,27 @@ const Dashboard = () => {
       <CRow className="Card-Box">
         <CCol sm={3}>
           <CRow>
-            <CCol sm={6}>
+            <CCol sm={6} hidden={userRole.role !== 'Admin'}>
               <h6>Department</h6>
               <CFormSelect
                 aria-label="Default select example"
                 onChange={(e) => {
                   setDepartmentId(e.target.selectedOptions[0].value)
-                  setSubDepartmentId(0)
                   subDepartmentsAsync(e.target.selectedOptions[0].value).then((response) => {
                     if (response.data !== null) setSubDepartments(response.data)
                   })
                 }}
               >
-                <option key="0" value="">
-                  --Select department--
-                </option>
+                <option value=""> --Select Department-- </option>
                 {departments &&
                   departments.map((row) => (
-                    <option key={row.id} value={row.id}>
+                    <option key={'d' + row.id} value={row.id}>
                       {row.name}
                     </option>
                   ))}
               </CFormSelect>
             </CCol>
-            <CCol sm={6}>
+            <CCol sm={userRole.role === 'Admin' ? 6 : 12}>
               <h6>Sub Department</h6>
               <CFormSelect
                 aria-label="Default select example"
@@ -112,13 +112,10 @@ const Dashboard = () => {
                   setSubDepartmentId(e.target.selectedOptions[0].value)
                 }}
               >
-                <option key="0" value="">
-                  {' '}
-                  --Select sub department--{' '}
-                </option>
+                <option value=""> --Select sub department-- </option>
                 {subDepartments &&
                   subDepartments.map((row) => (
-                    <option key={row.id} value={row.id}>
+                    <option key={'sd' + row.id} value={row.id}>
                       {row.name}
                     </option>
                   ))}
