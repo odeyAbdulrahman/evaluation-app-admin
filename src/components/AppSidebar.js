@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { CSidebar, CSidebarBrand, CSidebarNav, CSidebarToggler } from '@coreui/react'
@@ -14,10 +14,14 @@ import 'simplebar/dist/simplebar.min.css'
 import navigation from '../_nav'
 
 const AppSidebar = () => {
+  const [token, setToken] = useState(localStorage.getItem('token'))
+  useEffect(() => {
+    setToken(localStorage.getItem('token'))
+  }, [])
+
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.sidebarShow)
-
   return (
     <CSidebar
       position="fixed"
@@ -32,7 +36,7 @@ const AppSidebar = () => {
       </CSidebarBrand>
       <CSidebarNav>
         <SimpleBar>
-          <AppSidebarNav items={navigation} />
+          <AppSidebarNav items={navigation(token)} />
         </SimpleBar>
       </CSidebarNav>
       <CSidebarToggler

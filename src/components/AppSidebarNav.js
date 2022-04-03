@@ -21,7 +21,7 @@ export const AppSidebarNav = ({ items }) => {
   }
 
   const navItem = (item, index) => {
-    const { component, name, badge, icon, ...rest } = item
+    const { component, name, badge, icon, hidden, ...rest } = item
     const Component = component
     return (
       <Component
@@ -31,6 +31,7 @@ export const AppSidebarNav = ({ items }) => {
             activeClassName: 'active',
           })}
         key={index}
+        hidden={hidden}
         {...rest}
       >
         {navLink(name, icon, badge)}

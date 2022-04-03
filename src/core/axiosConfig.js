@@ -5,9 +5,9 @@ import { status } from './enums/statusCode'
 import { logOut } from './services/authService'
 const api = ({ ...options }) => {
   const baseUrl = "https://evaluationapi.dhaid.shj.ae/api/";
-  const baseUrlTest = "https://localhost:44379/api/";
+  //const baseUrlTest = "https://localhost:44379/api/";
   const token = JSON.parse(localStorage.getItem('token'))
-  const api = axios.create({ baseURL: baseUrlTest })
+  const api = axios.create({ baseURL: baseUrl })
   api.defaults.headers.common['Authorization'] = 'Bearer ' + token
   api.defaults.headers.common['Access-Control-Allow-Origin'] = '*'
   api.defaults.headers.common['Consumer'] = '143217789'
