@@ -9,5 +9,8 @@ export const HasRole = (token, roles) => {
 }
 
 export const IsAdmin = (token) => {
+  if (token === null) {
+    return false
+  }
   return token.role === roles.Admin ? false : true
 }

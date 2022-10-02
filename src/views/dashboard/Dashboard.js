@@ -146,12 +146,16 @@ const Dashboard = () => {
         </CCol>
         <WidgetsDepartmentCard cardCounts={cardCounts} />
       </CRow>
-      <CRow className="Card-Box">
-        <WidgetsCounts counts={counts} />
-      </CRow>
-      <CRow className="Card-Box">
-        <WidgetStats counts={counts} />
-      </CRow>
+      <div hidden={userRole.role !== 'Admin'}>
+        <CRow className="Card-Box">
+          <WidgetsCounts counts={counts} />
+        </CRow>
+      </div>
+      <div hidden={userRole.role !== 'Admin'}>
+        <CRow className="Card-Box">
+          <WidgetStats counts={counts} />
+        </CRow>
+      </div>
     </>
   )
 }

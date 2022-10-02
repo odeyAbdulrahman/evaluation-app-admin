@@ -132,7 +132,7 @@ const Login = () => {
                   </Formik>
                 </CCardBody>
               </CCard>
-              <CCard className="text-white bg-color py-5" style={{ width: '44%' }}>
+              <CCard className="text-white py-5" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>
                     <img src={logoImg} width="150" height="150" />
